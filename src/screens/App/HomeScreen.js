@@ -1,5 +1,7 @@
+import {YOUTUBE_API_KEY} from '@env';
 import React, {useContext, useReducer, useState} from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Linking,
@@ -60,7 +62,7 @@ const HomeScreen = () => {
     dispatchSearchResults({type: 'initiate'});
     try {
       const result = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?key=AIzaSyDXwElb6vzZ-yxRo62_iFK3xpzqbaLxNY4&type=video&part=snippet&maxResults=25&q=${query}`,
+        `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&type=video&part=snippet&maxResults=25&q=${query}`,
       );
       const response = await result.json();
       dispatchSearchResults({type: 'success', response: response});
@@ -141,6 +143,12 @@ const HomeScreen = () => {
           }
         />
       </View>
+
+      {searchResults.isLoading && (
+        <View style={{alignItems: 'center'}}>
+          <ActivityIndicator size={'small'} />
+        </View>
+      )}
 
       <View style={styles.resultsContainer}>
         <FlatList
